@@ -74,8 +74,8 @@ def main():
                     sizeN = noise[0,:,:,:].size()
                     noise[n,:,:,:] = torch.FloatTensor(sizeN).normal_(mean=0, std=stdN[n]/255.)
             imgn_train = img_train + noise
-            img_train, imgn_train = Variable(img_train.cuda()), Variable(imgn_train.cuda())
-            noise = Variable(noise.cuda())
+            img_train, imgn_train = img_train.cuda(), imgn_train.cuda()
+            noise = noise.cuda()
             out_train = model(imgn_train)
             loss = criterion(out_train, noise) / (imgn_train.size()[0]*2)
             loss.backward()
@@ -100,7 +100,7 @@ def main():
             img_val = torch.unsqueeze(dataset_val[k], 0)
             noise = torch.FloatTensor(img_val.size()).normal_(mean=0, std=opt.val_noiseL/255.)
             imgn_val = img_val + noise
-            img_val, imgn_val = Variable(img_val.cuda(), volatile=True), Variable(imgn_val.cuda(), volatile=True)
+            img_val, imgn_val = img_val.cuda(), imgn_val.cuda()
             out_val = torch.clamp(imgn_val-model(imgn_val), 0., 1.)
             psnr_val += batch_PSNR(out_val, img_val, 1.)
         psnr_val /= len(dataset_val)

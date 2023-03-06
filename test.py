@@ -47,7 +47,7 @@ def main():
         noise = torch.FloatTensor(ISource.size()).normal_(mean=0, std=opt.test_noiseL/255.)
         # noisy image
         INoisy = ISource + noise
-        ISource, INoisy = Variable(ISource.cuda()), Variable(INoisy.cuda())
+        ISource, INoisy = ISource.cuda(), INoisy.cuda()
         with torch.no_grad(): # this can save much memory
             Out = torch.clamp(INoisy-model(INoisy), 0., 1.)
         ## if you are using older version of PyTorch, torch.no_grad() may not be supported
